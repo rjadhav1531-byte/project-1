@@ -1,16 +1,12 @@
 # Diabetes Prediction Streamlit App
 
-import os
 import pickle
 import numpy as np
 import streamlit as st
-from sklearn.preprocessing import StandardScaler as SS
 
 # -------------------------------
 # 1. Data Fetching & Model Setup
 # -------------------------------
-ss = SS()
-
 # Features used for prediction
 features = [
     "Pregnancies", "Glucose", "BloodPressure",
@@ -18,9 +14,9 @@ features = [
     "DiabetesPedigreeFunction", "Age"
 ]
 
-# Load the trained model (make sure "trained_model.pkl" is in the same folder)
+# Load the trained model and scaler
 model = pickle.load(open("trained_model.pkl", 'rb'))
-
+scaler = pickle.load(open("scaler.pkl", 'rb'))
 
 # -------------------------------
 # 2. Prediction Function
@@ -28,8 +24,8 @@ model = pickle.load(open("trained_model.pkl", 'rb'))
 def prediction(data):
     data = np.asarray(data).reshape(1, -1)
 
-    # Scale the data
-    data_scaled = ss.fit_transform(data)
+    # Scale the data using the loaded scaler
+    data_scaled = scaler.transform(data)
 
     # Predict (0 = No Diabetes, 1 = Diabetes)
     res = model.predict(data_scaled)[0]
@@ -59,7 +55,6 @@ def prediction(data):
         explanation["Age"] = f"Age {age} is not a major risk factor for diabetes."
 
     return res, explanation
-
 
 # -------------------------------
 # 3. Main Application
@@ -133,7 +128,6 @@ def main():
             '''<h4 style="color: grey; margin-block: 15px; border: solid #1b3053 1px; border-radius: 10px; padding: 20px; margin-inline: auto; text-align: center;">Submit for results</h4>''',
             unsafe_allow_html=True
         )
-
 
 # -------------------------------
 # 5. Run App

@@ -54,9 +54,12 @@ acc = accuracy_score(y_test, y_pred)
 print(f"Model trained successfully ✅ | Accuracy: {acc*100:.2f}%")
 
 # -------------------------------
-# 7. Save Model
+# 7. Save Model and Scaler
 # -------------------------------
 with open("trained_model.pkl", "wb") as f:
     pickle.dump(model, f)
 
-print("trained_model.pkl saved 🎉")
+with open("scaler.pkl", "wb") as f:
+    pickle.dump(scaler, f)
+
+print("trained_model.pkl and scaler.pkl saved 🎉")
